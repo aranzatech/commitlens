@@ -31,11 +31,16 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit",
-    "demo:poc": "node ./scripts/poc-demo.mjs"
+    "demo:poc": "node ./scripts/poc-demo.mjs",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
   },
   "keywords": [
     "git-hooks",
     "ai",
+    "claude",
+    "codex",
+    "code-review",
+    "lint",
     "pipeline",
     "quality",
     "aranza"
@@ -46,6 +51,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/aranzatech/commitlens.git"
+  },
+  "homepage": "https://github.com/aranzatech/commitlens#readme",
+  "bugs": {
+    "url": "https://github.com/aranzatech/commitlens/issues"
   },
   "dependencies": {
     "cac": "^6.7.14",
