@@ -1,4 +1,4 @@
-# 🧠 PROMPT: `@aranza/commitlens` — AI-Powered Git Quality Pipeline
+# 🧠 PROMPT: `@aranzatech/commitlens` — AI-Powered Git Quality Pipeline
 
 ---
 
@@ -6,15 +6,15 @@
 
 Existe una necesidad común en equipos de desarrollo de automatizar la revisión y validación de código antes de que llegue al repositorio. Herramientas como Husky permiten ejecutar scripts en git hooks, pero requieren configuración manual de cada paso y no tienen integración nativa con herramientas de AI.
 
-`@aranza/commitlens` es un paquete npm que actúa como un **orquestador de calidad para git hooks**: se instala como `devDependency` en cualquier proyecto JavaScript/TypeScript y permite configurar un pipeline de pasos por hook, donde cada paso puede ser un comando arbitrario (linter, tests, build) o una revisión de AI, con control granular de si cada paso es bloqueante o solo una advertencia.
+`@aranzatech/commitlens` es un paquete npm que actúa como un **orquestador de calidad para git hooks**: se instala como `devDependency` en cualquier proyecto JavaScript/TypeScript y permite configurar un pipeline de pasos por hook, donde cada paso puede ser un comando arbitrario (linter, tests, build) o una revisión de AI, con control granular de si cada paso es bloqueante o solo una advertencia.
 
-Es parte del ecosistema de paquetes **AranzaTech** bajo el scope `@aranza`.
+Es parte del ecosistema de paquetes **AranzaTech** bajo el scope `@aranzatech`.
 
 ---
 
 ## 🎯 Objetivo
 
-Crear un paquete npm llamado `@aranza/commitlens` que:
+Crear un paquete npm llamado `@aranzatech/commitlens` que:
 
 - Se instale como `devDependency` en cualquier proyecto JS/TS
 - Instale y gestione git hooks automáticamente (como Husky)
@@ -39,7 +39,7 @@ Crear un paquete npm llamado `@aranza/commitlens` que:
 | Config loader | jiti (para leer `.config.ts` en runtime) |
 | Validación de config | Zod |
 | Testing | Vitest |
-| Publicación | npm (scope `@aranza`) |
+| Publicación | npm (scope `@aranzatech`) |
 
 ---
 
@@ -80,7 +80,7 @@ Crear un paquete npm llamado `@aranza/commitlens` que:
 
 ```ts
 // commitlens.config.ts
-import { defineConfig } from '@aranza/commitlens'
+import { defineConfig } from '@aranzatech/commitlens'
 
 export default defineConfig({
   provider: 'claude-code',
@@ -379,7 +379,7 @@ commitlens/
 
 ```json
 {
-  "name": "@aranza/commitlens",
+  "name": "@aranzatech/commitlens",
   "version": "0.1.0",
   "description": "AI-powered git quality pipeline manager for JS/TS projects",
   "bin": {
@@ -402,7 +402,7 @@ commitlens/
 ```json
 {
   "devDependencies": {
-    "@aranza/commitlens": "^1.0.0"
+    "@aranzatech/commitlens": "^1.0.0"
   },
   "scripts": {
     "prepare": "commitlens install"
@@ -413,7 +413,7 @@ commitlens/
 ### Instalación en cualquier proyecto
 
 ```bash
-npm install --save-dev @aranza/commitlens
+npm install --save-dev @aranzatech/commitlens
 npx commitlens init
 ```
 
@@ -421,7 +421,7 @@ npx commitlens init
 
 ## 🧩 Criterios de Éxito
 
-- `npm install --save-dev @aranza/commitlens` en un proyecto existente no rompe nada
+- `npm install --save-dev @aranzatech/commitlens` en un proyecto existente no rompe nada
 - `npx commitlens init` genera una config funcional en menos de 5 segundos
 - Un commit ejecuta el pipeline completo mostrando cada step con su resultado
 - Un step `blocking: false` que falla muestra warning pero permite continuar
@@ -433,4 +433,4 @@ npx commitlens init
 
 ---
 
-*Paquete parte del ecosistema **AranzaTech** — `@aranza` scope en npm.*
+*Paquete parte del ecosistema **AranzaTech** — `@aranzatech` scope en npm.*

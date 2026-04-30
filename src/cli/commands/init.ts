@@ -17,7 +17,7 @@ async function resolveTemplatePath(cwd: string): Promise<string> {
   const candidatePaths: string[] = [
     path.resolve(packageRootPath, TEMPLATE_RELATIVE_PATH),
     path.resolve(cwd, TEMPLATE_RELATIVE_PATH),
-    path.resolve(cwd, "node_modules", "@aranza", "commitlens", TEMPLATE_RELATIVE_PATH)
+    path.resolve(cwd, "node_modules", "@aranzatech", "commitlens", TEMPLATE_RELATIVE_PATH)
   ];
 
   for (const candidatePath of candidatePaths) {

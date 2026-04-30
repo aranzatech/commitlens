@@ -1,5 +1,5 @@
 {
-  "name": "@aranza/commitlens",
+  "name": "@aranzatech/commitlens",
   "version": "0.1.0",
   "description": "AI-powered git quality pipeline manager for JS/TS projects",
   "license": "MIT",

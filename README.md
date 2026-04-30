@@ -1,6 +1,6 @@
-# @aranza/commitlens
+# @aranzatech/commitlens
 
-`@aranza/commitlens` is an AI-ready quality pipeline orchestrator for git hooks.
+`@aranzatech/commitlens` is an AI-ready quality pipeline orchestrator for git hooks.
 
 It runs configurable steps per hook (`pre-commit`, `pre-push`, `commit-msg`) and applies granular blocking rules:
 
@@ -44,7 +44,7 @@ Use `commitlens init` to generate the base file.
 Minimal `commitlens.config.ts` example:
 
 ```ts
-import { defineConfig } from "@aranza/commitlens";
+import { defineConfig } from "@aranzatech/commitlens";
 
 export default defineConfig({
   provider: "custom",

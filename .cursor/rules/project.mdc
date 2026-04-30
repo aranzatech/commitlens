@@ -1,12 +1,12 @@
 ---
-description: Contexto general de @aranza/commitlens
+description: Contexto general de @aranzatech/commitlens
 globs: ["**/*.ts"]
 alwaysApply: true
 ---
 
-# @aranza/commitlens
+# @aranzatech/commitlens
 
-Paquete npm que actúa como orquestador de calidad para git hooks, parte del ecosistema AranzaTech bajo el scope `@aranza`.
+Paquete npm que actúa como orquestador de calidad para git hooks, parte del ecosistema AranzaTech bajo el scope `@aranzatech`.
 
 ## Concepto central
 No es solo un AI reviewer. Es un pipeline engine donde cada hook tiene un array de steps que se ejecutan en orden. Cada step puede ser un comando arbitrario (lint, tests, build) o una revisión AI. Cada step tiene control independiente de blocking.

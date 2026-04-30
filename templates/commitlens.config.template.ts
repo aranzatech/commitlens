@@ -1,4 +1,4 @@
-import { defineConfig } from "@aranza/commitlens";
+import { defineConfig } from "@aranzatech/commitlens";
 
 export default defineConfig({
   fallback: ["claude-api", "openai"],
