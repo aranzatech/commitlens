@@ -37,7 +37,12 @@ export interface ProviderConfig {
   script?: string;
 }
 
+export interface AiConfig {
+  enabled?: boolean;
+}
+
 export interface CommitlensConfig {
+  ai?: AiConfig;
   fallback?: string[];
   hooks: Partial<Record<HookName, HookConfig>>;
   provider?: string;

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.1
+
+- Add optional AI toggle through `ai.enabled` in config.
+- Skip AI steps cleanly when AI is disabled, without warnings or blocking.
+- Update template and README to document "free mode" without AI evaluation.
+- Add test coverage for disabled-AI behavior in both step-level and pipeline-level flows.
+
 ## 0.1.0
 
 - Bootstrap project with strict TypeScript, tsup build, vitest tests, and CLI wiring.

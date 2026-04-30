@@ -59,6 +59,31 @@ describe("runAiStep", () => {
     expect(result.passed).toBe(false);
     expect(result.forceWarning).toBe(true);
   });
+
+  it("skips AI execution when ai.enabled is false", async () => {
+    const config: CommitlensConfig = {
+      ai: {
+        enabled: false
+      },
+      fallback: ["custom"],
+      hooks: {},
+      provider: "custom",
+      providers: {
+        custom: {
+          script: "/path/that/should/not/run.sh"
+        }
+      }
+    };
+
+    const result = await runAiStep(
+      { blocking: true, name: "ai-review", prompt: "Review", type: "ai" },
+      config,
+      []
+    );
+
+    expect(result.passed).toBe(true);
+    expect(result.message).toContain("AI is disabled by config");
+  });
 });
 
 describe("pipeline with ai step", () => {
@@ -89,6 +114,42 @@ describe("pipeline with ai step", () => {
       const result = await runPipeline("pre-commit", cwd);
       expect(result.shouldBlock).toBe(false);
       expect(result.counters.warnings).toBe(1);
+      expect(result.counters.errors).toBe(0);
+    } finally {
+      await rm(cwd, { force: true, recursive: true });
+    }
+  });
+
+  it("passes AI step when ai.enabled is false", async () => {
+    await mkdir(tempRoot, { recursive: true });
+    const cwd = await mkdtemp(path.join(tempRoot, "commitlens-ai-disabled-"));
+
+    try {
+      await writeFile(
+        path.join(cwd, "commitlens.config.ts"),
+        `
+        export default {
+          ai: { enabled: false },
+          provider: "custom",
+          providers: {
+            custom: { script: ".commitlens/missing-reviewer.sh" }
+          },
+          hooks: {
+            "pre-commit": {
+              steps: [
+                { name: "ai-review", type: "ai", blocking: true, prompt: "Review please" }
+              ]
+            }
+          }
+        };
+        `,
+        "utf8"
+      );
+
+      const result = await runPipeline("pre-commit", cwd);
+      expect(result.shouldBlock).toBe(false);
+      expect(result.counters.passed).toBe(1);
+      expect(result.counters.warnings).toBe(0);
       expect(result.counters.errors).toBe(0);
     } finally {
       await rm(cwd, { force: true, recursive: true });

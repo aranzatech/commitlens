@@ -1,6 +1,9 @@
 import { defineConfig } from "@aranzatech/commitlens";
 
 export default defineConfig({
+  ai: {
+    enabled: true
+  },
   fallback: ["claude-api", "openai"],
   hooks: {
     "commit-msg": {

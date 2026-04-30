@@ -13,6 +13,13 @@ export async function runAiStep(
   config: CommitlensConfig,
   files: string[] = []
 ): Promise<StepResult> {
+  if (config.ai?.enabled === false) {
+    return {
+      message: "AI is disabled by config. Skipping AI review step.",
+      passed: true
+    };
+  }
+
   const selectedProviderNames = collectProviderOrder(config);
 
   for (const providerName of selectedProviderNames) {

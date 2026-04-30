@@ -34,6 +34,11 @@ const hookSchema = z.object({
 });
 
 export const commitlensConfigSchema = z.object({
+  ai: z
+    .object({
+      enabled: z.boolean().optional()
+    })
+    .optional(),
   fallback: z.array(z.string()).optional(),
   hooks: z
     .object({

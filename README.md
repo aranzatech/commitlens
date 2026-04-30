@@ -7,6 +7,8 @@ It runs configurable steps per hook (`pre-commit`, `pre-push`, `commit-msg`) and
 - `blocking: true` -> fail the hook
 - `blocking: false` -> report warning and continue
 
+AI usage is optional. You can disable AI globally and keep only classic pipeline checks.
+
 ## Features
 
 - Hook pipeline execution for `pre-commit`, `pre-push`, and `commit-msg`
@@ -47,6 +49,9 @@ Minimal `commitlens.config.ts` example:
 import { defineConfig } from "@aranzatech/commitlens";
 
 export default defineConfig({
+  ai: {
+    enabled: false // Fully disable AI evaluation (free mode)
+  },
   provider: "custom",
   fallback: [],
   hooks: {
@@ -96,5 +101,6 @@ npm run build
 - **No `.git` folder**: `commitlens install` exits with warning and does not fail hard.
 - **No `commitlens.config.ts`**: pipeline is skipped silently by design.
 - **AI provider unavailable**: `ai` steps degrade to warning and do not block by default fallback behavior.
+- **Disable AI entirely**: set `ai.enabled = false` and keep `command` / `commit-msg` steps only.
 - **commit-msg hook argument**: pass commit message path when invoking manually:
   - `commitlens run commit-msg .git/COMMIT_EDITMSG`
