@@ -1,0 +1,27 @@
+---
+description: Reglas para el pipeline engine y los steps
+globs: ["src/core/**/*.ts", "src/steps/**/*.ts"]
+alwaysApply: false
+---
+
+# Pipeline Engine
+
+## Flujo de ejecución
+1. pipeline-runner.ts recibe el nombre del hook (pre-commit, pre-push, commit-msg)
+2. Carga la config via config/loader.ts
+3. Itera el array steps[] del hook en orden
+4. Por cada step llama a step-runner.ts
+5. step-runner delega al step correspondiente según el type
+6. Evalúa el resultado y decide si continúa o hace exit 1
+
+## Reglas de pipeline-runner
+- Si un step retorna passed: false y blocking: true → exit 1 inmediatamente, no ejecutar más steps
+- Si un step retorna passed: false y blocking: false → acumular warning, continuar al siguiente step
+- Al finalizar todos los steps mostrar resumen: cuántos passed, cuántos warnings, cuántos errores
+- Prefijo obligatorio en todo output: [commitlens]
+
+## Interfaces de steps
+
+```ts---
+alwaysApply: true
+---

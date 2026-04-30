@@ -1,0 +1,41 @@
+---
+description: Reglas para crear o modificar AI providers
+globs: ["src/providers/**/*.ts"]
+alwaysApply: false
+---
+
+# Providers
+
+## Interfaz obligatoria
+Todo provider DEBE implementar AIProvider:
+
+```ts
+interface AIProvider {
+  name: string
+  isAvailable(): Promise<boolean>
+  review(input: ReviewInput): Promise<ReviewResult>
+}
+
+interface ReviewInput {
+  files: string[]
+  prompt: string
+  diff?: string
+}
+
+interface ReviewResult {
+  passed: boolean
+  message: string
+  issues?: string[]
+}
+```
+
+## Reglas
+- passed: true SOLO si la respuesta del AI es exactamente "OK"
+- isAvailable() NUNCA lanza excepciones, solo retorna false
+- Providers CLI (claude-code, codex, cursor) → usar execa
+- Providers HTTP (claude-api, openai) → usar fetch nativo
+- Un provider por archivo: [nombre].provider.ts
+- Si el provider falla, lanzar ProviderError con mensaje descriptivo
+
+## Fallback
+Si el provider principal retorna isAvailable() false, pipeline-runner intenta los providers en el array fallback[] de la config en orden hasta encontrar uno disponible.

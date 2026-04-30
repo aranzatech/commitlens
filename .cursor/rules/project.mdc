@@ -1,0 +1,34 @@
+---
+description: Contexto general de @aranza/commitlens
+globs: ["**/*.ts"]
+alwaysApply: true
+---
+
+# @aranza/commitlens
+
+Paquete npm que actúa como orquestador de calidad para git hooks, parte del ecosistema AranzaTech bajo el scope `@aranza`.
+
+## Concepto central
+No es solo un AI reviewer. Es un pipeline engine donde cada hook tiene un array de steps que se ejecutan en orden. Cada step puede ser un comando arbitrario (lint, tests, build) o una revisión AI. Cada step tiene control independiente de blocking.
+
+## Stack
+- TypeScript + Node.js ≥ 18
+- tsup → build
+- CAC → CLI
+- execa → subprocesos
+- simple-git → interacción con git
+- jiti → leer commitlens.config.ts en runtime
+- Zod → validación de config
+- Vitest → tests
+
+## Tipos de steps
+- command → ejecuta cualquier comando de shell (lint, tests, build, etc.)
+- ai → pasa archivos staged al provider AI configurado
+- commit-msg → valida formato del mensaje de commit
+
+## Regla de blocking
+- blocking: true → si el step falla, exit 1 y se detiene el pipeline completo
+- blocking: false → si el step falla, muestra warning y continúa al siguiente step
+
+## Regla crítica
+Nunca hardcodear API keys. Siempre leer de process.env o del objeto providers en commitlens.config.ts.

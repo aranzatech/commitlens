@@ -1,0 +1,25 @@
+---
+description: Reglas para comandos CLI
+globs: ["src/cli/**/*.ts"]
+alwaysApply: false
+---
+
+# CLI Commands
+
+## Framework
+Usar CAC. Un archivo por comando en src/cli/commands/.
+
+## Comandos
+- init     → genera commitlens.config.ts desde template en /templates
+- install  → escribe hooks en .git/hooks/ con permisos de ejecución
+- run      → ejecuta un hook manualmente pasando el nombre como argumento
+- doctor   → verifica disponibilidad de cada provider configurado
+- use      → cambia el campo provider en commitlens.config.ts
+
+## Reglas
+- Todo output con prefijo [commitlens]
+- Errores fatales → console.error + process.exit(1)
+- Warnings → console.warn, nunca process.exit(1)
+- Si git no está inicializado → advertir y salir silenciosamente
+- Si no existe commitlens.config.ts → omitir hooks silenciosamente
+- El prepare script debe fallar silenciosamente si git no está inicializado

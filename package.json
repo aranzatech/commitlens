@@ -1,0 +1,62 @@
+{
+  "name": "@aranza/commitlens",
+  "version": "0.1.0",
+  "description": "AI-powered git quality pipeline manager for JS/TS projects",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "commitlens": "./bin/commitlens.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "templates"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "demo:poc": "node ./scripts/poc-demo.mjs"
+  },
+  "keywords": [
+    "git-hooks",
+    "ai",
+    "pipeline",
+    "quality",
+    "aranza"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aranzatech/commitlens.git"
+  },
+  "dependencies": {
+    "cac": "^6.7.14",
+    "execa": "^9.6.0",
+    "jiti": "^2.6.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

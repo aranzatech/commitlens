@@ -1,0 +1,34 @@
+---
+description: Convenciones generales de código
+globs: ["**/*.ts"]
+alwaysApply: true
+---
+
+# Convenciones de Código
+
+## Naming
+- Archivos: kebab-case → pipeline-runner.ts, claude-code.provider.ts, command.step.ts
+- Clases: PascalCase → PipelineRunner, ClaudeCodeProvider, CommandStep
+- Funciones y variables: camelCase → runPipeline, stagedFiles
+- Constantes globales: UPPER_SNAKE_CASE → DEFAULT_MODEL
+
+## TypeScript
+- Tipos explícitos siempre en funciones públicas
+- Preferir interface sobre type para contratos
+- Nunca usar any, preferir unknown
+- Exports nombrados, no default exports (excepto en config)
+
+## Imports (orden obligatorio)
+1. Node built-ins (fs, path)
+2. Dependencias externas (execa, zod, simple-git)
+3. Imports internos (@/core, @/providers, @/steps, @/config)
+
+## Errores custom
+- CommitlensError → errores generales del paquete
+- ProviderError → errores específicos de providers AI
+- Nunca catch vacío, siempre loguear o relanzar
+
+## Testing
+- Un archivo de test por módulo: pipeline-runner.test.ts
+- Vitest con describe/it
+- Mockear execa y fetch en tests de providers y steps
