@@ -10,6 +10,8 @@ const commandStepSchema = z.object({
 const aiStepSchema = z.object({
   blocking: z.boolean(),
   filePatterns: z.array(z.string().min(1)).optional(),
+  maxDiffLines: z.number().int().positive().optional(),
+  maxLinesPerFile: z.number().int().positive().optional(),
   name: z.string().min(1),
   prompt: z.string().min(1).optional(),
   promptFile: z.string().min(1).optional(),

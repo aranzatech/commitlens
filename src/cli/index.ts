@@ -2,6 +2,7 @@ import { cac } from "cac";
 import pc from "picocolors";
 
 import { CommitlensError } from "../errors/commitlens-error.js";
+import { loadDotEnv } from "../core/env-loader.js";
 import { handleAiPingCommand } from "./commands/ai-ping.js";
 import { handleDoctorCommand } from "./commands/doctor.js";
 import { handleInitCommand } from "./commands/init.js";
@@ -14,9 +15,11 @@ export interface RunCliOptions {
 }
 
 const CLI_NAME = "commitlens";
-const DEFAULT_VERSION = "0.2.1";
+const DEFAULT_VERSION = "0.3.0";
 
 export function runCli(argv: string[], options: RunCliOptions = {}): void {
+  loadDotEnv(process.cwd());
+
   const cli = cac(CLI_NAME);
 
   cli

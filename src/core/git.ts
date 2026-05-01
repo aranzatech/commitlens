@@ -45,6 +45,26 @@ export async function listStagedFilePaths(cwd: string): Promise<string[]> {
 }
 
 /**
+ * Returns the unified diff of staged changes for the given file paths.
+ * Returns empty string when there are no changes or git is unavailable.
+ */
+export async function getStagedDiff(files: string[], cwd: string): Promise<string> {
+  if (files.length === 0) return "";
+
+  try {
+    const result = await execa("git", ["diff", "--cached", "--unified=3", "--", ...files], {
+      cwd,
+      reject: false
+    });
+
+    if (result.exitCode !== 0) return "";
+    return result.stdout;
+  } catch {
+    return "";
+  }
+}
+
+/**
  * Builds an absolute path for the git hooks directory.
  */
 export function getHooksDirectory(cwd: string): string {

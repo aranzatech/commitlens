@@ -19,7 +19,12 @@ export interface AiStepConfig extends BaseStepConfig {
   filePatterns?: string[];
   /** When true/false, overrides global `ai.showReviewOutput` for this step. */
   showOutput?: boolean;
+  /** Max lines of diff to include per file before truncating (default: 150). */
+  maxLinesPerFile?: number;
+  /** Max total lines of diff to send to the AI across all files (default: 400). */
+  maxDiffLines?: number;
   prompt?: string;
+  /** Path to a file containing the review prompt, relative to the repo root. */
   promptFile?: string;
   /** Stream model output live; overrides global `ai.streamModelOutput` when set. */
   streamModelOutput?: boolean;

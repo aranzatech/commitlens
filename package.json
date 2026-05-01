@@ -1,6 +1,6 @@
 {
   "name": "@aranzatech/commitlens",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "AI-powered git quality pipeline manager for JS/TS projects",
   "license": "MIT",
   "type": "module",
