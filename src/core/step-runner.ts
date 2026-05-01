@@ -17,7 +17,7 @@ export async function runStep(
   }
 
   if (step.type === "ai") {
-    return runAiStep(step, context.config);
+    return runAiStep(step, context.config, context.cwd);
   }
 
   if (step.type === "commit-msg") {

@@ -1,6 +1,16 @@
 import { loadCommitlensConfig } from "../config/loader.js";
 import { runStep } from "./step-runner.js";
-import type { CommitlensConfig, HookConfig, HookName } from "../types/config.js";
+import {
+  aiReviewOutputBlock,
+  pipelineBanner,
+  pipelineSummaryFooter,
+  skipHookNoSteps,
+  softWarnLine,
+  stepBlockingFailLine,
+  stepPassedLine,
+  stepWarningLine
+} from "./terminal-style.js";
+import type { CommitlensConfig, HookConfig, HookName, StepConfig } from "../types/config.js";
 import type { PipelineCounters, PipelineRunResult } from "../types/pipeline.js";
 
 /**
@@ -14,7 +24,7 @@ export async function runPipeline(
   const config = await loadCommitlensConfig(cwd);
 
   if (config === null) {
-    process.stdout.write("[commitlens] No commitlens.config.ts found, skipping hook.\n");
+    process.stdout.write(softWarnLine("No commitlens.config.ts found, skipping hook."));
     return {
       counters: createInitialCounters(),
       shouldBlock: false
@@ -23,20 +33,18 @@ export async function runPipeline(
 
   const hookConfig = config.hooks[hook];
   if (hookConfig === undefined) {
-    process.stdout.write(`[commitlens] No steps configured for ${hook}, skipping.\n`);
+    process.stdout.write(skipHookNoSteps(hook));
     return {
       counters: createInitialCounters(),
       shouldBlock: false
     };
   }
 
-  process.stdout.write(`[commitlens] Running ${hook} pipeline...\n`);
+  process.stdout.write(pipelineBanner(hook));
   const counters = createInitialCounters();
   const shouldBlock = await executeSteps(hookConfig, counters, config, cwd, hookArgs);
 
-  process.stdout.write(
-    `[commitlens] Summary: passed=${counters.passed}, warnings=${counters.warnings}, errors=${counters.errors}\n`
-  );
+  process.stdout.write(pipelineSummaryFooter(counters));
 
   return {
     counters,
@@ -55,24 +63,30 @@ async function executeSteps(
     const result = await runStep(step, { config, cwd, hookArgs });
     if (result.passed) {
       counters.passed += 1;
-      process.stdout.write(`  ✅ ${step.name} passed\n`);
+      if (step.type === "ai" && shouldShowAiReviewOutput(step, config)) {
+        const block = aiReviewOutputBlock(result.message);
+        if (block !== "") {
+          process.stdout.write(block);
+        }
+      }
+      process.stdout.write(stepPassedLine(step.name));
       continue;
     }
 
     if (result.forceWarning === true) {
       counters.warnings += 1;
-      process.stdout.write(`  ⚠️  ${step.name} warning -> ${result.message} (non-blocking)\n`);
+      process.stdout.write(stepWarningLine(step.name, result.message));
       continue;
     }
 
     if (step.blocking) {
       counters.errors += 1;
-      process.stderr.write(`  ❌ ${step.name} FAILED -> ${result.message} (blocking)\n`);
+      process.stderr.write(stepBlockingFailLine(step.name, result.message));
       return true;
     }
 
     counters.warnings += 1;
-    process.stdout.write(`  ⚠️  ${step.name} warning -> ${result.message} (non-blocking)\n`);
+    process.stdout.write(stepWarningLine(step.name, result.message));
   }
 
   return false;
@@ -84,4 +98,20 @@ function createInitialCounters(): PipelineCounters {
     passed: 0,
     warnings: 0
   };
+}
+
+function shouldShowAiReviewOutput(step: StepConfig, config: CommitlensConfig): boolean {
+  if (step.type !== "ai") {
+    return false;
+  }
+
+  if (step.showOutput === true) {
+    return true;
+  }
+
+  if (step.showOutput === false) {
+    return false;
+  }
+
+  return config.ai?.showReviewOutput === true;
 }

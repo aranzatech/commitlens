@@ -2,6 +2,7 @@ import { access } from "node:fs/promises";
 
 import { execaCommand } from "execa";
 
+import { inferPassFromReviewOutput } from "../core/review-pass.js";
 import { ProviderError } from "../errors/provider-error.js";
 import type { AIProvider, ReviewInput, ReviewResult } from "../types/providers.js";
 
@@ -35,7 +36,7 @@ export class CustomProvider implements AIProvider {
 
       return {
         message: output.length > 0 ? output : "No output from custom provider",
-        passed: output === "OK"
+        passed: inferPassFromReviewOutput(output)
       };
     } catch (error: unknown) {
       throw new ProviderError(`[commitlens] custom provider failed: ${String(error)}`, "CUSTOM_PROVIDER_FAILED");

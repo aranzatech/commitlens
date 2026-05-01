@@ -3,6 +3,7 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
+import { initCreatedLine, stderrWarn } from "../../core/terminal-style.js";
 import { CommitlensError } from "../../errors/commitlens-error.js";
 
 const CONFIG_FILE_NAME = "commitlens.config.ts";
@@ -44,7 +45,7 @@ export async function handleInitCommand(): Promise<void> {
 
   try {
     await access(destinationPath);
-    console.warn("[commitlens] commitlens.config.ts already exists. Skipping.");
+    stderrWarn("commitlens.config.ts already exists — skipping.");
     return;
   } catch {
     // Continue to create config from template.
@@ -52,5 +53,5 @@ export async function handleInitCommand(): Promise<void> {
 
   const templatePath = await resolveTemplatePath(cwd);
   await copyFile(templatePath, destinationPath);
-  process.stdout.write("[commitlens] Created commitlens.config.ts from template.\n");
+  process.stdout.write(initCreatedLine());
 }

@@ -2,6 +2,7 @@ import process from "node:process";
 
 import { loadCommitlensConfig } from "../../config/loader.js";
 import { evaluateProviderHealth } from "../../core/provider-doctor.js";
+import { doctorHeader, doctorProviderLine, stderrWarn } from "../../core/terminal-style.js";
 
 /**
  * Handles the doctor CLI command.
@@ -10,19 +11,18 @@ export async function handleDoctorCommand(): Promise<void> {
   const config = await loadCommitlensConfig(process.cwd());
 
   if (config === null) {
-    console.warn("[commitlens] No commitlens.config.ts found. Nothing to diagnose.");
+    stderrWarn("No commitlens.config.ts found — nothing to diagnose.");
     return;
   }
 
   const statuses = await evaluateProviderHealth(config);
   if (statuses.length === 0) {
-    console.warn("[commitlens] No providers configured.");
+    stderrWarn("No providers configured.");
     return;
   }
 
-  process.stdout.write("[commitlens] Provider diagnostics:\n");
+  process.stdout.write(doctorHeader());
   for (const status of statuses) {
-    const icon = status.available ? "✅" : "❌";
-    process.stdout.write(`  ${icon} ${status.providerName}: ${status.message}\n`);
+    process.stdout.write(doctorProviderLine(status.providerName, status.available, status.message));
   }
 }

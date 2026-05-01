@@ -2,6 +2,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
+import { execa } from "execa";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { handleInstallCommand } from "../src/cli/commands/install.js";
@@ -45,6 +46,25 @@ describe("handleInstallCommand", () => {
       expect(preCommitHook).toContain("npx commitlens run pre-commit");
       expect(prePushHook).toContain("npx commitlens run pre-push");
       expect(commitMsgHook).toContain("npx commitlens run commit-msg \"$1\"");
+    } finally {
+      await rm(cwd, { force: true, recursive: true });
+    }
+  });
+
+  it("unsets Husky core.hooksPath so .git/hooks are used", async () => {
+    await mkdir(tempRoot, { recursive: true });
+    const cwd = await mkdtemp(path.join(tempRoot, "commitlens-install-hooksPath-"));
+
+    try {
+      await execa("git", ["init"], { cwd });
+      await writeFile(path.join(cwd, "commitlens.config.ts"), "export default { hooks: {} };", "utf8");
+      await execa("git", ["config", "core.hooksPath", ".husky/_"], { cwd });
+
+      process.chdir(cwd);
+      await handleInstallCommand();
+
+      const hooksPathCheck = await execa("git", ["config", "--get", "core.hooksPath"], { cwd, reject: false });
+      expect(hooksPathCheck.exitCode).not.toBe(0);
     } finally {
       await rm(cwd, { force: true, recursive: true });
     }

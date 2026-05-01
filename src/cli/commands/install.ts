@@ -2,8 +2,10 @@ import { access } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
-import { installHooks } from "../../core/hook-installer.js";
+import { ensureGitUsesDotGitHooks } from "../../core/git-hooks-path.js";
 import { hasGitRepository } from "../../core/git.js";
+import { installHooks } from "../../core/hook-installer.js";
+import { hooksInstalledLine, stderrWarn } from "../../core/terminal-style.js";
 
 const CONFIG_FILE_NAME = "commitlens.config.ts";
 
@@ -14,7 +16,7 @@ export async function handleInstallCommand(): Promise<void> {
   const cwd = process.cwd();
 
   if (!(await hasGitRepository(cwd))) {
-    console.warn("[commitlens] Git is not initialized. Skipping hook installation.");
+    stderrWarn("Git is not initialized — skipping hook installation.");
     return;
   }
 
@@ -22,10 +24,11 @@ export async function handleInstallCommand(): Promise<void> {
   try {
     await access(configPath);
   } catch {
-    console.warn("[commitlens] No commitlens.config.ts found. Skipping hook installation.");
+    stderrWarn("No commitlens.config.ts found — skipping hook installation.");
     return;
   }
 
   await installHooks(cwd);
-  process.stdout.write("[commitlens] Hooks installed in .git/hooks.\n");
+  await ensureGitUsesDotGitHooks(cwd);
+  process.stdout.write(hooksInstalledLine());
 }

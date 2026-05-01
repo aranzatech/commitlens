@@ -1,6 +1,6 @@
 {
   "name": "@aranzatech/commitlens",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "AI-powered git quality pipeline manager for JS/TS projects",
   "license": "MIT",
   "type": "module",
@@ -39,10 +39,14 @@
     "ai",
     "claude",
     "codex",
+    "openai",
+    "gemini",
     "code-review",
     "lint",
     "pipeline",
     "quality",
+    "conventional-commits",
+    "husky",
     "aranza"
   ],
   "publishConfig": {
@@ -60,6 +64,7 @@
     "cac": "^6.7.14",
     "execa": "^9.6.0",
     "jiti": "^2.6.1",
+    "picocolors": "^1.1.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {

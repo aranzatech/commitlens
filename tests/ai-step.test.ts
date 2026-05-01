@@ -2,6 +2,7 @@ import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
+import { execaCommand } from "execa";
 import { describe, expect, it } from "vitest";
 
 import { runPipeline } from "../src/core/pipeline-runner.js";
@@ -32,7 +33,8 @@ describe("runAiStep", () => {
       const result = await runAiStep(
         { blocking: true, name: "ai-review", prompt: "Review", type: "ai" },
         config,
-        ["src/index.ts"]
+        cwd,
+        { filesOverride: ["src/index.ts"] }
       );
 
       expect(result.passed).toBe(true);
@@ -53,7 +55,8 @@ describe("runAiStep", () => {
     const result = await runAiStep(
       { blocking: true, name: "ai-review", prompt: "Review", type: "ai" },
       config,
-      []
+      process.cwd(),
+      { filesOverride: ["staged-placeholder.ts"] }
     );
 
     expect(result.passed).toBe(false);
@@ -78,7 +81,7 @@ describe("runAiStep", () => {
     const result = await runAiStep(
       { blocking: true, name: "ai-review", prompt: "Review", type: "ai" },
       config,
-      []
+      process.cwd()
     );
 
     expect(result.passed).toBe(true);
@@ -110,6 +113,10 @@ describe("pipeline with ai step", () => {
         `,
         "utf8"
       );
+
+      await execaCommand("git init", { cwd });
+      await writeFile(path.join(cwd, "staged.txt"), "x", "utf8");
+      await execaCommand("git add staged.txt", { cwd });
 
       const result = await runPipeline("pre-commit", cwd);
       expect(result.shouldBlock).toBe(false);

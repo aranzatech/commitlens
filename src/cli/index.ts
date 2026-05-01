@@ -1,6 +1,8 @@
 import { cac } from "cac";
+import pc from "picocolors";
 
 import { CommitlensError } from "../errors/commitlens-error.js";
+import { handleAiPingCommand } from "./commands/ai-ping.js";
 import { handleDoctorCommand } from "./commands/doctor.js";
 import { handleInitCommand } from "./commands/init.js";
 import { handleInstallCommand } from "./commands/install.js";
@@ -12,7 +14,7 @@ export interface RunCliOptions {
 }
 
 const CLI_NAME = "commitlens";
-const DEFAULT_VERSION = "0.1.0";
+const DEFAULT_VERSION = "0.1.6";
 
 /**
  * Runs the commitlens CLI entrypoint.
@@ -61,8 +63,24 @@ export function runCli(argv: string[], options: RunCliOptions = {}): void {
     });
 
   cli
+    .command("ai-ping", "Ejecuta una petición mínima a la IA para comprobar que responde OK")
+    .action(async (): Promise<void> => {
+      try {
+        await handleAiPingCommand();
+      } catch (error: unknown) {
+        handleCliError(error);
+      }
+    });
+
+  cli
     .command("use <provider>", "Cambia el provider AI activo")
     .action(handleUseCommand);
+
+  cli
+    .command("help", "Muestra comandos y opciones disponibles (igual que --help)")
+    .action((): void => {
+      cli.globalCommand.outputHelp();
+    });
 
   cli.help();
   cli.version(options.version ?? DEFAULT_VERSION);
@@ -71,17 +89,17 @@ export function runCli(argv: string[], options: RunCliOptions = {}): void {
 
 function handleCliError(error: unknown): void {
   if (error instanceof CommitlensError) {
-    process.stderr.write(`${error.message}\n`);
+    process.stderr.write(pc.red(error.message) + "\n");
     process.exitCode = 1;
     return;
   }
 
   if (error instanceof Error) {
-    process.stderr.write(`[commitlens] ${error.message}\n`);
+    process.stderr.write(pc.red(`[commitlens] ${error.message}`) + "\n");
     process.exitCode = 1;
     return;
   }
 
-  process.stderr.write("[commitlens] Unknown error while running command.\n");
+  process.stderr.write(pc.red("[commitlens] Unknown error while running command.") + "\n");
   process.exitCode = 1;
 }

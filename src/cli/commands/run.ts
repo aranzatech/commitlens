@@ -1,6 +1,7 @@
 import process from "node:process";
 
 import { runPipeline } from "../../core/pipeline-runner.js";
+import { stderrError } from "../../core/terminal-style.js";
 import { CommitlensError } from "../../errors/commitlens-error.js";
 import type { HookName } from "../../types/config.js";
 
@@ -27,7 +28,7 @@ export async function handleRunCommand(hook: string, hookArg?: string): Promise<
   const result = await runPipeline(hook, process.cwd(), hookArg === undefined ? [] : [hookArg]);
 
   if (result.shouldBlock) {
-    process.stderr.write("[commitlens] Hook blocked due to blocking step failure.\n");
+    stderrError("Hook blocked — a blocking step failed.");
     process.exitCode = 1;
   }
 }

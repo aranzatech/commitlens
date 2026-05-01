@@ -13,6 +13,8 @@ const aiStepSchema = z.object({
   name: z.string().min(1),
   prompt: z.string().min(1).optional(),
   promptFile: z.string().min(1).optional(),
+  showOutput: z.boolean().optional(),
+  streamModelOutput: z.boolean().optional(),
   type: z.literal("ai")
 });
 
@@ -36,7 +38,9 @@ const hookSchema = z.object({
 export const commitlensConfigSchema = z.object({
   ai: z
     .object({
-      enabled: z.boolean().optional()
+      enabled: z.boolean().optional(),
+      showReviewOutput: z.boolean().optional(),
+      streamModelOutput: z.boolean().optional()
     })
     .optional(),
   fallback: z.array(z.string()).optional(),

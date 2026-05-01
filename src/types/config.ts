@@ -17,8 +17,12 @@ export interface CommandStepConfig extends BaseStepConfig {
 
 export interface AiStepConfig extends BaseStepConfig {
   filePatterns?: string[];
+  /** When true/false, overrides global `ai.showReviewOutput` for this step. */
+  showOutput?: boolean;
   prompt?: string;
   promptFile?: string;
+  /** Stream model output live; overrides global `ai.streamModelOutput` when set. */
+  streamModelOutput?: boolean;
   type: "ai";
 }
 
@@ -39,6 +43,10 @@ export interface ProviderConfig {
 
 export interface AiConfig {
   enabled?: boolean;
+  /** Print provider reply to the terminal even when the AI step passes (OK). */
+  showReviewOutput?: boolean;
+  /** Stream Claude output while the review runs (stream-json + partial chunks). */
+  streamModelOutput?: boolean;
 }
 
 export interface CommitlensConfig {
