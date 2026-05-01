@@ -14,16 +14,13 @@ export interface RunCliOptions {
 }
 
 const CLI_NAME = "commitlens";
-const DEFAULT_VERSION = "0.1.6";
+const DEFAULT_VERSION = "0.2.1";
 
-/**
- * Runs the commitlens CLI entrypoint.
- */
 export function runCli(argv: string[], options: RunCliOptions = {}): void {
   const cli = cac(CLI_NAME);
 
   cli
-    .command("init", "Genera commitlens.config.ts con valores por defecto")
+    .command("init", "Create commitlens.config.ts from the built-in template")
     .action(async (): Promise<void> => {
       try {
         await handleInitCommand();
@@ -33,7 +30,7 @@ export function runCli(argv: string[], options: RunCliOptions = {}): void {
     });
 
   cli
-    .command("install", "Instala los git hooks en .git/hooks/")
+    .command("install", "Install git hook scripts into .git/hooks")
     .action(async (): Promise<void> => {
       try {
         await handleInstallCommand();
@@ -43,7 +40,7 @@ export function runCli(argv: string[], options: RunCliOptions = {}): void {
     });
 
   cli
-    .command("run <hook> [hookArg]", "Ejecuta un hook manualmente")
+    .command("run <hook> [hookArg]", "Run a hook pipeline manually")
     .action(async (hook: string, hookArg?: string): Promise<void> => {
       try {
         await handleRunCommand(hook, hookArg);
@@ -53,7 +50,7 @@ export function runCli(argv: string[], options: RunCliOptions = {}): void {
     });
 
   cli
-    .command("doctor", "Verifica disponibilidad de providers")
+    .command("doctor", "Check availability of configured AI providers")
     .action(async (): Promise<void> => {
       try {
         await handleDoctorCommand();
@@ -63,7 +60,7 @@ export function runCli(argv: string[], options: RunCliOptions = {}): void {
     });
 
   cli
-    .command("ai-ping", "Ejecuta una petición mínima a la IA para comprobar que responde OK")
+    .command("ai-ping", "Send a minimal request to validate AI provider connectivity")
     .action(async (): Promise<void> => {
       try {
         await handleAiPingCommand();
@@ -73,11 +70,11 @@ export function runCli(argv: string[], options: RunCliOptions = {}): void {
     });
 
   cli
-    .command("use <provider>", "Cambia el provider AI activo")
+    .command("use <provider>", "Switch the active AI provider")
     .action(handleUseCommand);
 
   cli
-    .command("help", "Muestra comandos y opciones disponibles (igual que --help)")
+    .command("help", "Print available commands and options (same as --help)")
     .action((): void => {
       cli.globalCommand.outputHelp();
     });
